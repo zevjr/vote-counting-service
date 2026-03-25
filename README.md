@@ -1,36 +1,137 @@
-# Projeto de Apuração de Votos Eleitorais
+# Projeto de Apuração Paralela de Votos
 
 ## Visão Geral
 
-Este projeto tem como objetivo facilitar o processo de apuração dos votos nas eleições municipais, digitalizando as zerésimas geradas pelas urnas eletrônicas e automatizando a transferência desses dados para um formato processável (CSV). Isso reduzirá a necessidade de agrupamento manual dos votos por candidatos, agilizando a apuração dos eleitos para os cargos de prefeito e vereador.
+Este projeto tem como objetivo permitir a apuração paralela de votos a partir dos Boletins de Urna (BU), antes da divulgação oficial pelos órgãos eleitorais.
 
-### Problema
+A solução utiliza os PDFs gerados pelo aplicativo oficial de leitura de QR Code dos boletins (Boletim na Mão), garantindo que os dados processados sejam autênticos e estruturados.
 
-Após o encerramento da votação, os fiscais de seção de cada partido recebem as zerésimas, que contêm a relação de todos os votos registrados na urna eletrônica. Atualmente, os votos precisam ser agrupados manualmente por candidato, e cálculos complexos são realizados para determinar os eleitos, o que demanda muito tempo e suscita possibilidades de erro humano.
+O sistema recebe esses arquivos, extrai automaticamente os dados de votação e consolida os resultados em tempo quase real.
 
-### Objetivo Inicial
+---
 
-O objetivo inicial do projeto é digitalizar as zerésimas e, através de um sistema de OCR (Reconhecimento Óptico de Caracteres), converter esses dados para uma planilha no formato CSV, permitindo a automação do agrupamento dos votos por candidatos.
+## Problema
 
-## Funcionalidades Principais (MVP)
+Durante o processo eleitoral, fiscais de partidos coletam os Boletins de Urna ao final da votação.
 
-1. **Digitalização de Zerésimas**: Utilizando OCR, o sistema irá reconhecer os caracteres das zerésimas digitalizadas e extrair os dados dos votos.
-2. **Interface de Envio**: Um aplicativo frontend permitirá que os fiscais enviem fotos das zerésimas, parte por parte, para processamento.
-3. **Exportação de Dados**: Os dados extraídos serão agrupados e exportados em um arquivo CSV contendo as informações de votos por candidato.
-   
-## Tecnologias Planejadas
+Atualmente, esse processo envolve:
 
-- **Frontend**: Aplicativo web ou mobile para envio das fotos das zerésimas.
-- **Backend**: Serviço de OCR para processar as imagens e extrair os dados.
-- **OCR**: Ferramentas como Tesseract ou outras soluções baseadas em IA para reconhecimento de caracteres.
-- **Exportação de Dados**: Geração de arquivos CSV para facilitar o agrupamento dos votos.
+- Coleta manual dos dados
+- Digitação em planilhas
+- Consolidação manual
+- Alto risco de erro humano
+- Baixa velocidade de apuração
 
-## Futuro Desenvolvimento
+Além disso, os dados oficiais consolidados pelo TSE só são disponibilizados após o processamento centralizado.
 
-1. **Banco de Dados**: Armazenar os dados extraídos em um banco de dados para facilitar a consulta e auditoria.
-2. **Automação de Cálculos**: Implementar algoritmos para realizar os cálculos de apuração de votos diretamente via código, reduzindo ainda mais a intervenção manual.
-3. **Relatórios e Dashboard**: Criar dashboards para visualização em tempo real dos votos apurados e relatórios automáticos com os resultados.
+---
 
-## Como Contribuir
+## Objetivo
 
-Este projeto ainda está em fase de planejamento. Caso tenha interesse em contribuir, você pode sugerir melhorias, novas funcionalidades ou ajudar no desenvolvimento das ferramentas descritas. Por favor, abra um issue ou submeta um pull request.
+Permitir que equipes realizem sua própria apuração paralela de forma:
+
+- Automatizada
+- Rápida
+- Escalável
+- Auditável
+
+---
+
+## Como Funciona
+
+1. O fiscal utiliza o app de leitura de QR Code para gerar o PDF do BU
+2. O PDF é enviado via interface web
+3. O arquivo é armazenado na nuvem
+4. Um pipeline assíncrono processa o documento
+5. Os dados são extraídos e armazenados
+6. Os votos são agregados automaticamente
+7. Um dashboard exibe os resultados em tempo real
+
+---
+
+## Arquitetura
+
+O sistema utiliza uma arquitetura orientada a eventos na AWS.
+
+Fluxo principal:
+
+Frontend → Upload → S3 → EventBridge → SQS → Lambda → Banco de Dados → API → Dashboard
+
+---
+
+## Componentes
+
+### Frontend
+
+- Upload de arquivos BU
+- Visualização dos resultados
+- Monitoramento do progresso
+
+---
+
+### Backend
+
+Responsável por:
+
+- Geração de URLs de upload
+- Exposição de APIs de consulta
+- Consolidação de dados
+
+---
+
+### Pipeline Assíncrono
+
+Responsável por:
+
+- Processamento dos PDFs
+- Extração de dados
+- Persistência das informações
+
+---
+
+### Infraestrutura
+
+Provisionada com Terraform, incluindo:
+
+- Armazenamento de arquivos
+- Filas de processamento
+- Funções serverless
+- Banco de dados relacional
+
+---
+
+## Tecnologias
+
+- Backend: Python (FastAPI)
+- Frontend: React / Next.js
+- Processamento de PDF: pdfplumber
+- Banco de Dados: PostgreSQL
+- Infraestrutura: AWS + Terraform
+
+---
+
+## Diferenciais
+
+- Não utiliza OCR (maior precisão)
+- Baseado em documentos oficiais (BU)
+- Processamento assíncrono e escalável
+- Arquitetura orientada a eventos
+- Parser isolado para fácil adaptação a novos layouts
+
+---
+
+## Roadmap Futuro
+
+- Suporte a múltiplos municípios
+- Validação automática de inconsistências
+- Comparação com dados oficiais
+- Dashboard em tempo real
+- Extração direta via QR Code (se viável)
+
+---
+
+## Aviso Importante
+
+Este sistema não substitui a apuração oficial realizada pelo TSE.
+
+Seu uso é destinado exclusivamente para apoio à fiscalização e monitoramento independente.
