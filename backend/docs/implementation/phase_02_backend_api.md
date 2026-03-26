@@ -5,7 +5,7 @@
 This phase implements the complete backend API for the BU Monitor system using Python + FastAPI + PostgreSQL. The backend supports all data needs of the Phase 01 frontend prototype and provides a foundation for future AWS integration.
 
 Key deliverables:
-- REST API with 8 endpoints matching frontend service calls
+- REST API with 7 endpoints matching frontend service calls
 - PostgreSQL schema with 3 tables (BoletimUrna, Vote, ProcessedFile)
 - Alembic migrations
 - MockBUParser for simulated vote data
