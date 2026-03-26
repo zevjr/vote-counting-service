@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "vote-counting-backend"
+version = "0.1.0"
+description = "BU Monitor Backend API"
+authors = ["zejr <brmou659987@ab-inbev.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.135.2"
+uvicorn = "^0.42.0"
+sqlalchemy = "^2.0.48"
+alembic = "^1.18.4"
+psycopg2-binary = "^2.9.11"
+pydantic = "^2.12.5"
+pydantic-settings = "^2.13.1"
+python-multipart = "^0.0.22"
+idna = "^3.11"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.0.2"
+pytest-asyncio = "^1.3.0"
+httpx = "^0.28.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
